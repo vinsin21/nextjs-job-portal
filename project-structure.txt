@@ -1,0 +1,47 @@
+job-portal-v0
+├── README.md
+├── app
+│   ├── about
+│   │   └── page.tsx
+│   ├── auth
+│   │   └── page.tsx
+│   ├── demo
+│   │   └── page.tsx
+│   ├── globals.css
+│   ├── jobs
+│   │   └── [id]
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── search
+│       └── page.tsx
+├── components
+│   ├── effects
+│   │   └── lightning.tsx
+│   ├── footer.tsx
+│   ├── job-card.tsx
+│   ├── mobile-bottom-nav.tsx
+│   ├── theme-provider.tsx
+│   └── ui
+│       └── neural-network-hero.tsx
+├── components.json
+├── lib
+│   ├── jobs.ts
+│   └── utils.ts
+├── next-env.d.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.mjs
+├── project-structure.txt
+├── public
+│   ├── founder-portrait-aisha.png
+│   ├── founder-portrait-leo.png
+│   ├── placeholder-logo.png
+│   ├── placeholder-logo.svg
+│   ├── placeholder-user.jpg
+│   ├── placeholder.jpg
+│   └── placeholder.svg
+├── styles
+│   └── globals.css
+└── tsconfig.json

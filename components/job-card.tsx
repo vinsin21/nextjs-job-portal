@@ -1,142 +1,126 @@
 "use client"
 
 import type React from "react"
-import { useRouter } from "next/navigation"
-import { Bookmark, Share2, Zap, Check, ArrowRight } from "lucide-react"
+import Link from "next/link" // Import the Link component
+import { Bookmark, Ban, Zap, Check, Send } from "lucide-react"
 
 export type Job = {
-  id: string
-  title: string
-  company: string
-  location: string
-  level: "Intern" | "Junior" | "Mid" | "Senior"
-  type: "Full-time" | "Part-time" | "Contract" | "Internship"
-  mode: "On-site" | "Remote" | "Hybrid"
-  salary?: string
-  iconBg?: string
-  applyUrl: string
-  short?: string
-  description?: string
-  urgent?: boolean
-  fastResponse?: boolean
-  salaryVariant?: "green" | "gray"
-  easilyApply?: boolean
+  _id: string;
+  title: string;
+  companyName: string;
+  location: string;
+  experienceLevel: string | null;
+  jobType: string | null;
+  salary: string | null;
+  applyUrl: string;
+  description: string;
+  descriptionHtml: string | null;
+  companyLogoUrl: string | null;
+  mode?: "On-site" | "Remote" | "Hybrid";
+  urgent?: boolean;
+  fastResponse?: boolean;
+  easilyApply?: boolean;
 }
 
 export default function JobCard({ job }: { job: Job }) {
-  const router = useRouter()
-
-  const goToDetails = () => router.push(`/jobs/${job.id}`)
-
-  const onKeyNavigate: React.KeyboardEventHandler<HTMLElement> = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault()
-      goToDetails()
-    }
-  }
-
-  const onShare = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
-    try {
-      await navigator.share?.({
-        title: `${job.title} at ${job.company}`,
-        text: job.short || "Check out this role",
-        url: `${window.location.origin}/jobs/${job.id}`,
-      })
-    } catch {
-      // no-op
-    }
-  }
 
   const onBookmark = (e: React.MouseEvent) => {
+    // Stop the link from navigating when the button is clicked
     e.stopPropagation()
     e.preventDefault()
-    // Replace with real bookmark later
-    // alert("Saved to bookmarks (demo)")
+    alert("Bookmark feature coming soon!")
+  }
+
+  const onHide = (e: React.MouseEvent) => {
+    // Stop the link from navigating when the button is clicked
+    e.stopPropagation()
+    e.preventDefault()
+    alert("Hide job feature coming soon!")
   }
 
   return (
-    <article
-      role="button"
-      tabIndex={0}
-      aria-label={`${job.title} at ${job.company}`}
-      onClick={goToDetails}
-      onKeyDown={onKeyNavigate}
-      className="relative w-full min-w-0 cursor-pointer rounded-3xl bg-white p-4 shadow-md ring-1 ring-black/5 transition hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
+    // Wrap the entire card in a Link component for navigation, removing the need for useRouter
+    <Link
+      href={`/jobs/${job._id}`}
+      className="block w-full min-w-0 rounded-2xl bg-white p-4 text-slate-800 ring-1 ring-gray-200/80 transition hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
     >
-      <div className="absolute right-3 top-3 flex items-center gap-2">
-        <button
-          aria-label="Bookmark"
-          onClick={onBookmark}
-          className="rounded-full border border-black/10 p-1.5 text-slate-700 hover:bg-slate-100"
-        >
-          <Bookmark className="h-4 w-4" aria-hidden />
-        </button>
-        <button
-          aria-label="Share"
-          onClick={onShare}
-          className="rounded-full border border-black/10 p-1.5 text-slate-700 hover:bg-slate-100"
-        >
-          <Share2 className="h-4 w-4" aria-hidden />
-        </button>
-      </div>
+      <article>
+        {/* --- TOP SECTION: BADGE AND ACTIONS --- */}
+        <div className="flex items-start justify-between mb-3">
+          {/* Badges like "Urgently hiring" */}
+          <div>
+            {job.urgent && (
+              <div className="inline-flex items-center rounded-md bg-pink-100 px-2 py-1 text-xs font-medium text-pink-800 ring-1 ring-inset ring-pink-200">
+                Urgently hiring
+              </div>
+            )}
+          </div>
 
-      {job.urgent && (
-        <div className="mb-2 inline-flex items-center rounded-full bg-pink-100 px-2.5 py-1 text-xs font-medium text-pink-700">
-          Urgently hiring
+          {/* Action Icons */}
+          <div className="flex items-center gap-1 -mr-2 -mt-2">
+            <button
+              aria-label="Bookmark"
+              onClick={onBookmark}
+              className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+            >
+              <Bookmark className="h-5 w-5" aria-hidden />
+            </button>
+            <button
+              aria-label="Hide job"
+              onClick={onHide}
+              className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+            >
+              <Ban className="h-5 w-5" aria-hidden />
+            </button>
+          </div>
         </div>
-      )}
 
-      <div className="min-w-0">
-        <h3 className="text-lg font-semibold text-slate-900">{job.title}</h3>
-        <p className="mt-0.5 text-sm text-slate-600">
-          {job.company}
-          <span className="mx-1.5 text-slate-400">•</span>
-          {job.location}
-        </p>
-      </div>
+        {/* --- MAIN INFO: TITLE, COMPANY, LOCATION --- */}
+        <div className="mb-3">
+          <h3 className="text-lg font-semibold text-gray-900 leading-tight">
+            {job.title}
+          </h3>
+          <p className="mt-1 text-sm text-gray-700">{job.companyName}</p>
+          <p className="text-sm text-gray-500">{job.location}</p>
+        </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        {(job.fastResponse ?? true) && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-            <Zap className="h-3.5 w-3.5" aria-hidden />
-            Typically responds within 1 day
-          </span>
-        )}
+        {/* --- HIGHLIGHT BADGES: FAST RESPONSE & SALARY --- */}
+        <div className="flex flex-col gap-y-2 mb-4">
+          {job.fastResponse && (
+            <div className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-800 ring-1 ring-inset ring-blue-200 w-fit">
+              <Zap className="h-3.5 w-3.5" aria-hidden />
+              <span>Typically responds within 1 day</span>
+            </div>
+          )}
+          {job.salary && (
+            <div className="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-800 ring-1 ring-inset ring-emerald-200 w-fit">
+              <Check className="h-3.5 w-3.5" aria-hidden />
+              <span>{job.salary}</span>
+            </div>
+          )}
+        </div>
 
-        {job.salary && (
-          <span
-            className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium ${
-              job.salaryVariant === "green" ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-700"
-            }`}
-          >
-            {job.salary}
-            {job.salaryVariant === "green" && <Check className="ml-0.5 h-3.5 w-3.5" aria-hidden />}
-          </span>
-        )}
+        {/* --- TAGS: JOB TYPE, ETC. --- */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          {job.jobType && (
+            <span className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 ring-1 ring-inset ring-gray-200">
+              {job.jobType}
+            </span>
+          )}
+          {job.experienceLevel && (
+            <span className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 ring-1 ring-inset ring-gray-200">
+              {job.experienceLevel}
+            </span>
+          )}
+        </div>
 
-        <span className="rounded-md bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700">{job.type}</span>
-        <span className="rounded-md bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700">{job.mode}</span>
-        <span className="rounded-md bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700">{job.level}</span>
-      </div>
-
-      <div className="mt-3 flex items-center gap-2 text-sm text-slate-700">
-        <ArrowRight className="h-4 w-4 text-indigo-600" aria-hidden />
-        <span>{(job.easilyApply ?? true) ? "Easily apply" : "Apply on company site"}</span>
-      </div>
-
-      <div className="mt-4">
-        <a
-          href={job.applyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="inline-flex w-full justify-center rounded-xl bg-neutral-900 px-3 py-2.5 text-sm font-medium text-white hover:bg-neutral-800"
-        >
-          Apply
-        </a>
-      </div>
-    </article>
+        {/* --- APPLY SECTION --- */}
+        <div className="flex items-center gap-2 text-sm text-blue-700 font-medium">
+          <Send className="h-4 w-4" aria-hidden />
+          <span>{(job.easilyApply ?? true) ? "Easily apply" : "Apply on company site"}</span>
+        </div>
+      </article>
+    </Link>
   )
 }
+
