@@ -1,0 +1,63 @@
+import type { Job } from "@/components/job-card"
+
+export const jobs: Job[] = [
+  {
+    id: "people-partner",
+    title: "People Partner",
+    company: "Happy & Co",
+    location: "Amsterdam, NL",
+    level: "Senior",
+    type: "Full-time",
+    mode: "On-site",
+    salary: "260K/year",
+    iconBg: "bg-pink-300/30",
+    applyUrl: "https://company.example.com/jobs/people-partner",
+    short: "Build supportive teams and programs across the company.",
+    description:
+      "We are looking for experienced and driven People Partners to act as connectors between teams. You will map dependencies, build programs that support growth, and keep a healthy culture through feedback and cross‑team initiatives.",
+  },
+  {
+    id: "pr-consultant",
+    title: "PR Consultant",
+    company: "Communication Co.",
+    location: "Remote",
+    level: "Senior",
+    type: "Full-time",
+    mode: "Remote",
+    salary: "140K/year",
+    iconBg: "bg-indigo-300/30",
+    applyUrl: "https://company.example.com/jobs/pr-consultant",
+    short: "Lead narrative, campaigns, and media relations.",
+    description:
+      "Own end‑to‑end communications across channels. Plan and execute PR strategies, manage press relationships, and mentor junior specialists.",
+  },
+  {
+    id: "hr-assistant",
+    title: "PR Assistant",
+    company: "People Company Ltd.",
+    location: "On-site",
+    level: "Junior",
+    type: "Full-time",
+    mode: "On-site",
+    salary: "80K/year",
+    iconBg: "bg-green-300/30",
+    applyUrl: "https://company.example.com/jobs/pr-assistant",
+    short: "Support daily PR operations and reporting.",
+    description:
+      "Assist with briefs, coverage tracking, and content draft reviews while learning best practices in PR.",
+  },
+  {
+    id: "media-relations-manager",
+    title: "Media Relations Manager",
+    company: "Public Media Ltd.",
+    location: "Hybrid",
+    level: "Mid",
+    type: "Full-time",
+    mode: "Hybrid",
+    salary: "115K/year",
+    iconBg: "bg-purple-300/30",
+    applyUrl: "https://company.example.com/jobs/media-relations-manager",
+    short: "Manage media touchpoints and brand voice.",
+    description: "Coordinate statements, interviews, and event presence, ensuring consistent, on‑brand messaging.",
+  },
+]
