@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useRouter } from "next/navigation"
-import { Bookmark, Share2 } from "lucide-react"
+import { Bookmark, Share2, Zap, Check, ArrowRight } from "lucide-react"
 
 export type Job = {
   id: string
@@ -13,19 +13,20 @@ export type Job = {
   type: "Full-time" | "Part-time" | "Contract" | "Internship"
   mode: "On-site" | "Remote" | "Hybrid"
   salary?: string
-  iconBg?: string // e.g. bg-pink-300/80
+  iconBg?: string
   applyUrl: string
   short?: string
   description?: string
+  urgent?: boolean
+  fastResponse?: boolean
+  salaryVariant?: "green" | "gray"
+  easilyApply?: boolean
 }
 
 export default function JobCard({ job }: { job: Job }) {
   const router = useRouter()
-  const iconColor = job.iconBg || "bg-white/10"
 
-  const goToDetails = () => {
-    router.push(`/jobs/${job.id}`)
-  }
+  const goToDetails = () => router.push(`/jobs/${job.id}`)
 
   const onKeyNavigate: React.KeyboardEventHandler<HTMLElement> = (e) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -51,7 +52,8 @@ export default function JobCard({ job }: { job: Job }) {
   const onBookmark = (e: React.MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-    alert("Saved to bookmarks (demo)")
+    // Replace with real bookmark later
+    // alert("Saved to bookmarks (demo)")
   }
 
   return (
@@ -61,66 +63,79 @@ export default function JobCard({ job }: { job: Job }) {
       aria-label={`${job.title} at ${job.company}`}
       onClick={goToDetails}
       onKeyDown={onKeyNavigate}
-      className="w-full min-w-0 cursor-pointer group rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+      className="relative w-full min-w-0 cursor-pointer rounded-3xl bg-white p-4 shadow-md ring-1 ring-black/5 transition hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50"
     >
-      <div className="flex items-start gap-3">
-        <div className={`h-10 w-10 shrink-0 rounded-xl ${iconColor} grid place-items-center`}>
-          <span className="text-sm text-white/90" aria-hidden>
-            ◎
+      <div className="absolute right-3 top-3 flex items-center gap-2">
+        <button
+          aria-label="Bookmark"
+          onClick={onBookmark}
+          className="rounded-full border border-black/10 p-1.5 text-slate-700 hover:bg-slate-100"
+        >
+          <Bookmark className="h-4 w-4" aria-hidden />
+        </button>
+        <button
+          aria-label="Share"
+          onClick={onShare}
+          className="rounded-full border border-black/10 p-1.5 text-slate-700 hover:bg-slate-100"
+        >
+          <Share2 className="h-4 w-4" aria-hidden />
+        </button>
+      </div>
+
+      {job.urgent && (
+        <div className="mb-2 inline-flex items-center rounded-full bg-pink-100 px-2.5 py-1 text-xs font-medium text-pink-700">
+          Urgently hiring
+        </div>
+      )}
+
+      <div className="min-w-0">
+        <h3 className="text-lg font-semibold text-slate-900">{job.title}</h3>
+        <p className="mt-0.5 text-sm text-slate-600">
+          {job.company}
+          <span className="mx-1.5 text-slate-400">•</span>
+          {job.location}
+        </p>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        {(job.fastResponse ?? true) && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+            <Zap className="h-3.5 w-3.5" aria-hidden />
+            Typically responds within 1 day
           </span>
-        </div>
+        )}
 
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <div className="min-w-0">
-              {/* Title links to job details */}
-              <h3 className="text-sm font-medium text-white group-hover:underline line-clamp-2">{job.title}</h3>
-              <p className="truncate text-xs text-white/70 break-words">
-                {job.company} • {job.location}
-              </p>
-            </div>
+        {job.salary && (
+          <span
+            className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium ${
+              job.salaryVariant === "green" ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-700"
+            }`}
+          >
+            {job.salary}
+            {job.salaryVariant === "green" && <Check className="ml-0.5 h-3.5 w-3.5" aria-hidden />}
+          </span>
+        )}
 
-            {/* top-right actions: small icons */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              <button
-                aria-label="Bookmark"
-                onClick={onBookmark}
-                className="rounded-full border border-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/5"
-              >
-                <Bookmark className="h-4 w-4" aria-hidden />
-              </button>
-              <button
-                aria-label="Share"
-                onClick={onShare}
-                className="rounded-full border border-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/5"
-              >
-                <Share2 className="h-4 w-4" aria-hidden />
-              </button>
-            </div>
-          </div>
+        <span className="rounded-md bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700">{job.type}</span>
+        <span className="rounded-md bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700">{job.mode}</span>
+        <span className="rounded-md bg-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700">{job.level}</span>
+      </div>
 
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/80">{job.type}</span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/80">{job.mode}</span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/80">
-              {job.level} level
-            </span>
-            {job.salary && <span className="text-white/80 sm:ml-auto">{job.salary}</span>}
-          </div>
+      <div className="mt-3 flex items-center gap-2 text-sm text-slate-700">
+        <ArrowRight className="h-4 w-4 text-indigo-600" aria-hidden />
+        <span>{(job.easilyApply ?? true) ? "Easily apply" : "Apply on company site"}</span>
+      </div>
 
-          {/* full-width Apply at bottom; stop propagation so card doesn't navigate */}
-          <div className="mt-3">
-            <a
-              href={job.applyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex w-full justify-center rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20"
-            >
-              Apply
-            </a>
-          </div>
-        </div>
+      <div className="mt-4">
+        <a
+          href={job.applyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex w-full justify-center rounded-xl bg-neutral-900 px-3 py-2.5 text-sm font-medium text-white hover:bg-neutral-800"
+        >
+          Apply
+        </a>
       </div>
     </article>
   )

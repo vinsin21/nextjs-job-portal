@@ -15,6 +15,10 @@ export const jobs: Job[] = [
     short: "Build supportive teams and programs across the company.",
     description:
       "We are looking for experienced and driven People Partners to act as connectors between teams. You will map dependencies, build programs that support growth, and keep a healthy culture through feedback and cross‑team initiatives.",
+    urgent: true,
+    fastResponse: true,
+    salaryVariant: "gray",
+    easilyApply: true,
   },
   {
     id: "pr-consultant",
@@ -24,12 +28,16 @@ export const jobs: Job[] = [
     level: "Senior",
     type: "Full-time",
     mode: "Remote",
-    salary: "140K/year",
+    salary: "Up to ₹50,000 a month",
     iconBg: "bg-indigo-300/30",
     applyUrl: "https://company.example.com/jobs/pr-consultant",
     short: "Lead narrative, campaigns, and media relations.",
     description:
       "Own end‑to‑end communications across channels. Plan and execute PR strategies, manage press relationships, and mentor junior specialists.",
+    urgent: true,
+    fastResponse: true,
+    salaryVariant: "green",
+    easilyApply: true,
   },
   {
     id: "hr-assistant",
