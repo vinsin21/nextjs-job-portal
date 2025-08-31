@@ -13,20 +13,20 @@ export default function AboutPage() {
 
       <section className="mx-auto grid max-w-5xl gap-6 px-6 md:grid-cols-2 md:px-10 lg:px-16">
         <Founder
-          name="Aisha Khan"
-          role="Co‑founder & Product"
-          imgSrc="/founder-portrait-aisha.png"
+          name="Sidhi Bhagat"
+          role="Co‑founder"
+          imgSrc="https://media.licdn.com/dms/image/v2/D4D03AQGx_68uPLD55w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1688393862973?e=1759363200&v=beta&t=Ge-cCrF9i3jBHoeqKgZmqx5Sd-9NgpR_xUVMlJcFgq8"
           bio="Aisha built products for early‑stage startups. She believes great tools feel invisible and let people focus on what matters."
           twitter="https://twitter.com"
-          linkedin="https://www.linkedin.com"
+          linkedin="https://www.linkedin.com/in/sidhibhagat/"
         />
         <Founder
-          name="Leo Martinez"
-          role="Co‑founder & Engineering"
-          imgSrc="/founder-portrait-leo.png"
+          name="Vineet Singh"
+          role="Co‑founder"
+          imgSrc="https://media.licdn.com/dms/image/v2/D5603AQG57nJKG7TeCA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1721634344346?e=1759363200&v=beta&t=qIwB_dYQXKj4yiPMNw8P6STJrgq3XPuFsix734b5NDs"
           bio="Leo led web platforms used by thousands of students. He enjoys shipping fast, accessible experiences."
           twitter="https://twitter.com"
-          linkedin="https://www.linkedin.com"
+          linkedin="https://www.linkedin.com/in/sidhibhagat/"
         />
       </section>
 

@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { motion } from "framer-motion"
 import { Bookmark, Ban, Zap, Check, Send } from "lucide-react"
 
 export type Job = {
@@ -24,25 +25,25 @@ export type Job = {
 export default function JobCard({ job }: { job: Job }) {
 
   const onBookmark = (e: React.MouseEvent) => {
-    // Stop the link from navigating when the button is clicked
     e.stopPropagation()
     e.preventDefault()
     alert("Bookmark feature coming soon!")
   }
 
   const onHide = (e: React.MouseEvent) => {
-    // Stop the link from navigating when the button is clicked
     e.stopPropagation()
     e.preventDefault()
     alert("Hide job feature coming soon!")
   }
 
   return (
-    // Using a standard <a> tag for navigation resolves the import issue
-    // and functions as a direct link to the job detail page.
-    <a
+    <motion.a
       href={`/jobs/${job._id}`}
-      className="block w-full min-w-0 rounded-3xl bg-neutral-900/50 p-4 text-slate-300 ring-1 ring-white/10 transition hover:bg-neutral-800/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      className="block w-full min-w-0 rounded-3xl bg-neutral-900/50 p-4 text-slate-300 ring-1 ring-white/10 transition-shadow duration-300 hover:shadow-lg hover:shadow-blue-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      // Animation props
+      whileHover={{ scale: 1.03, y: -5 }} // Animate on hover: scale up and lift
+      whileTap={{ scale: 0.97 }} // Animate on tap: scale down
+      transition={{ type: "spring", stiffness: 400, damping: 20 }} // Smooth spring physics
     >
       <article>
         {/* --- TOP SECTION: BADGE AND ACTIONS --- */}
@@ -118,7 +119,7 @@ export default function JobCard({ job }: { job: Job }) {
           <span>{(job.easilyApply ?? true) ? "Easily apply" : "Apply on company site"}</span>
         </div>
       </article>
-    </a>
+    </motion.a>
   )
 }
 

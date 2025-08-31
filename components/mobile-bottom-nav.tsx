@@ -15,7 +15,7 @@ export default function MobileBottomNav() {
   const pathname = usePathname()
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-50 md:hidden border-t border-black/10 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-50 md:hidden border-t border-black/10 bg-black backdrop-blur  pb-[env(safe-area-inset-bottom)]"
       aria-label="Bottom navigation"
     >
       <ul className="grid grid-cols-4">
@@ -27,11 +27,10 @@ export default function MobileBottomNav() {
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center justify-center py-2.5 transition-colors ${
-                  active ? "text-blue-600" : "text-slate-600 hover:text-slate-900"
-                }`}
+                className={`flex flex-col items-center justify-center py-2.5 transition-colors ${active ? "text-blue-600" : "text-slate-600 hover:text-slate-900"
+                  }`}
               >
-                <Icon className="h-5 w-5" aria-hidden />
+                <Icon className="h-7 w-7" aria-hidden />
                 <span className="sr-only">{item.label}</span>
               </Link>
             </li>
