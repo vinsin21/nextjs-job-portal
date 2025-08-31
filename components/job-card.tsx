@@ -1,8 +1,8 @@
 "use client"
 
 import type React from "react"
-
-import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Bookmark, Share2 } from "lucide-react"
 
 export type Job = {
   id: string
@@ -20,9 +20,22 @@ export type Job = {
 }
 
 export default function JobCard({ job }: { job: Job }) {
+  const router = useRouter()
   const iconColor = job.iconBg || "bg-white/10"
 
+  const goToDetails = () => {
+    router.push(`/jobs/${job.id}`)
+  }
+
+  const onKeyNavigate: React.KeyboardEventHandler<HTMLElement> = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault()
+      goToDetails()
+    }
+  }
+
   const onShare = async (e: React.MouseEvent) => {
+    e.stopPropagation()
     e.preventDefault()
     try {
       await navigator.share?.({
@@ -36,13 +49,20 @@ export default function JobCard({ job }: { job: Job }) {
   }
 
   const onBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation()
     e.preventDefault()
-    // demo only
     alert("Saved to bookmarks (demo)")
   }
 
   return (
-    <article className="w-full min-w-0 group rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/[0.08] focus-within:outline-none focus-within:ring-2 focus-within:ring-white/30">
+    <article
+      role="button"
+      tabIndex={0}
+      aria-label={`${job.title} at ${job.company}`}
+      onClick={goToDetails}
+      onKeyDown={onKeyNavigate}
+      className="w-full min-w-0 cursor-pointer group rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+    >
       <div className="flex items-start gap-3">
         <div className={`h-10 w-10 shrink-0 rounded-xl ${iconColor} grid place-items-center`}>
           <span className="text-sm text-white/90" aria-hidden>
@@ -51,30 +71,30 @@ export default function JobCard({ job }: { job: Job }) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0">
               {/* Title links to job details */}
-              <Link href={`/jobs/${job.id}`} className="focus:outline-none focus-visible:underline">
-                <h3 className="text-sm font-medium text-white hover:underline line-clamp-2">{job.title}</h3>
-              </Link>
+              <h3 className="text-sm font-medium text-white group-hover:underline line-clamp-2">{job.title}</h3>
               <p className="truncate text-xs text-white/70 break-words">
                 {job.company} • {job.location}
               </p>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+
+            {/* top-right actions: small icons */}
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 aria-label="Bookmark"
                 onClick={onBookmark}
-                className="rounded-full border border-white/10 p-2 text-white/80 hover:text-white hover:bg-white/5"
+                className="rounded-full border border-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/5"
               >
-                <span aria-hidden>🔖</span>
+                <Bookmark className="h-4 w-4" aria-hidden />
               </button>
               <button
                 aria-label="Share"
                 onClick={onShare}
-                className="rounded-full border border-white/10 p-2 text-white/80 hover:text-white hover:bg-white/5"
+                className="rounded-full border border-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/5"
               >
-                <span aria-hidden>↗</span>
+                <Share2 className="h-4 w-4" aria-hidden />
               </button>
             </div>
           </div>
@@ -88,18 +108,14 @@ export default function JobCard({ job }: { job: Job }) {
             {job.salary && <span className="text-white/80 sm:ml-auto">{job.salary}</span>}
           </div>
 
-          <div className="mt-3 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:gap-2">
-            <Link
-              href={`/jobs/${job.id}`}
-              className="inline-flex w-full justify-center rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 sm:w-auto"
-            >
-              View details
-            </Link>
+          {/* full-width Apply at bottom; stop propagation so card doesn't navigate */}
+          <div className="mt-3">
             <a
               href={job.applyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full justify-center rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20 sm:w-auto"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex w-full justify-center rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs text-white backdrop-blur hover:bg-white/20"
             >
               Apply
             </a>
