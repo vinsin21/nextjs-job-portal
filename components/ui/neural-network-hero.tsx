@@ -114,7 +114,7 @@ export default function Hero({
   )
 
   return (
-    <section ref={sectionRef} className="relative min-h-[100svh] w-full overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-[100svh] w-[100svw] overflow-hidden">
       {/* --- NEW BACKGROUND LAYER --- */}
       <div className="pointer-events-none absolute inset-0 z-0 w-full h-full">
         <DarkVeil
@@ -123,7 +123,7 @@ export default function Hero({
           noiseIntensity={0.03}
           scanlineIntensity={0.05}
           scanlineFrequency={800}
-          warpAmount={0.1}
+          warpAmount={0.9}
         />
       </div>
 
