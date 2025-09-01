@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} bg-[#0A0A0A]`}>
         <Suspense
           fallback={
             <div className="min-h-[50vh] w-full flex items-center justify-center text-white/70 text-sm">Loading…</div>

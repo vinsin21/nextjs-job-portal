@@ -25,7 +25,6 @@ job-portal-v0
 │       └── neural-network-hero.tsx
 ├── components.json
 ├── lib
-│   ├── api.ts
 │   ├── jobs.ts
 │   └── utils.ts
 ├── next-env.d.ts
@@ -35,7 +34,6 @@ job-portal-v0
 ├── pnpm-lock.yaml
 ├── postcss.config.mjs
 ├── project-structure.txt
-├── project-structure1.txt
 ├── public
 │   ├── founder-portrait-aisha.png
 │   ├── founder-portrait-leo.png
