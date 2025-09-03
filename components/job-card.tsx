@@ -4,6 +4,7 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { Bookmark, Ban, Zap, Check, Send } from "lucide-react"
 
+// 1. Add 'sourcePlatform' to the Job type to match our backend data
 export type Job = {
   _id: string;
   title: string;
@@ -16,11 +17,21 @@ export type Job = {
   description: string;
   descriptionHtml: string | null;
   companyLogoUrl: string | null;
+  sourcePlatform: string; // Added this field
   mode?: "On-site" | "Remote" | "Hybrid";
   urgent?: boolean;
   fastResponse?: boolean;
   easilyApply?: boolean;
 }
+
+// 2. Create a helper object for platform-specific styling
+const platformStyles: { [key: string]: string } = {
+  LinkedIn: "text-blue-300 bg-blue-500/10 ring-blue-500/20",
+  Indeed: "text-indigo-300 bg-indigo-500/10 ring-indigo-500/20",
+  Naukri: "text-orange-300 bg-orange-500/10 ring-orange-500/20",
+  Default: "text-slate-300 bg-white/5 ring-white/10" // Fallback style
+};
+
 
 export default function JobCard({ job }: { job: Job }) {
 
@@ -40,13 +51,11 @@ export default function JobCard({ job }: { job: Job }) {
     <motion.a
       href={`/jobs/${job._id}`}
       className="block w-full min-w-0 rounded-3xl bg-neutral-900/50 p-4 text-slate-300 ring-1 ring-white/10 transition-shadow duration-300 hover:shadow-lg hover:shadow-blue-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-      // Animation props
-      whileHover={{ scale: 1.03, y: -5 }} // Animate on hover: scale up and lift
-      whileTap={{ scale: 0.97 }} // Animate on tap: scale down
-      transition={{ type: "spring", stiffness: 400, damping: 20 }} // Smooth spring physics
+      whileHover={{ scale: 1.03, y: -5 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
     >
       <article>
-        {/* --- TOP SECTION: BADGE AND ACTIONS --- */}
         <div className="flex items-start justify-between mb-3">
           <div>
             {job.urgent && (
@@ -74,7 +83,6 @@ export default function JobCard({ job }: { job: Job }) {
           </div>
         </div>
 
-        {/* --- MAIN INFO: TITLE, COMPANY, LOCATION --- */}
         <div className="mb-3">
           <h3 className="text-lg font-medium text-white leading-tight">
             {job.title}
@@ -83,7 +91,6 @@ export default function JobCard({ job }: { job: Job }) {
           <p className="text-sm text-slate-500">{job.location}</p>
         </div>
 
-        {/* --- HIGHLIGHT BADGES: FAST RESPONSE & SALARY --- */}
         <div className="flex flex-col items-start gap-y-2 mb-4">
           {job.fastResponse && (
             <div className="inline-flex items-center gap-1.5 rounded-md bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-300 ring-1 ring-inset ring-blue-500/20 w-fit">
@@ -99,8 +106,13 @@ export default function JobCard({ job }: { job: Job }) {
           )}
         </div>
 
-        {/* --- TAGS: JOB TYPE, ETC. --- */}
+        {/* --- 3. ADDED THE PLATFORM BADGE HERE --- */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
+          {job.sourcePlatform && (
+            <span className={`rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset ${platformStyles[job.sourcePlatform] || platformStyles.Default}`}>
+              via {job.sourcePlatform}
+            </span>
+          )}
           {job.jobType && (
             <span className="rounded-md bg-white/5 px-2 py-1 text-xs text-slate-300 ring-1 ring-inset ring-white/10">
               {job.jobType}
@@ -113,7 +125,6 @@ export default function JobCard({ job }: { job: Job }) {
           )}
         </div>
 
-        {/* --- APPLY SECTION --- */}
         <div className="flex items-center gap-2 text-sm text-blue-400 font-medium">
           <Send className="h-4 w-4" aria-hidden />
           <span>{(job.easilyApply ?? true) ? "Easily apply" : "Apply on company site"}</span>

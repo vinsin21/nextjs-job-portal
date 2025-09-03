@@ -5,15 +5,23 @@ import JobCard, { Job } from "@/components/job-card"
 import MobileBottomNav from "@/components/mobile-bottom-nav"
 import Link from "next/link"
 import { getJobs } from "@/lib/api"
+// Import the new Select components
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 type Filters = {
   search: string
   location: string
   experienceLevel: string
   jobType: string
+  sourcePlatform: string
 }
 
-// A simple debounce hook to prevent API calls on every keystroke
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   useEffect(() => {
@@ -40,11 +48,11 @@ export default function SearchPage() {
     location: "",
     experienceLevel: "",
     jobType: "",
+    sourcePlatform: ""
   })
 
   const debouncedFilters = useDebounce(filters, 500);
 
-  // This effect runs when the filters change. It resets the jobs list and fetches page 1.
   useEffect(() => {
     async function fetchInitialJobs() {
       setIsLoading(true);
@@ -68,10 +76,8 @@ export default function SearchPage() {
     fetchInitialJobs();
   }, [debouncedFilters]);
 
-  // This function now handles loading the next page of jobs
   const handleLoadMore = async () => {
     if (currentPage >= totalPages || isLoadingMore) return;
-
     setIsLoadingMore(true);
     const nextPage = currentPage + 1;
     const activeFilters = Object.fromEntries(
@@ -79,14 +85,11 @@ export default function SearchPage() {
     );
     try {
       const response = await getJobs({ ...activeFilters, page: String(nextPage) });
-
-      // Use a Map to ensure jobs are unique by their _id, preventing duplicate key errors
       setJobs(prevJobs => {
         const allJobs = [...prevJobs, ...response.data.jobs];
         const uniqueJobsMap = new Map(allJobs.map(job => [job._id, job]));
         return Array.from(uniqueJobsMap.values());
       });
-
       setCurrentPage(nextPage);
     } catch (error) {
       console.error("Failed to load more jobs:", error);
@@ -105,43 +108,57 @@ export default function SearchPage() {
               Home
             </Link>
           </div>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <input
               aria-label="Search"
               placeholder="Job title or keyword"
               value={filters.search}
               onChange={(e) => setFilters((s) => ({ ...s, search: e.target.value }))}
-              className="min-w-0 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="min-w-0 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/50 h-10"
             />
             <input
               aria-label="Location"
               placeholder="Location"
               value={filters.location}
               onChange={(e) => setFilters((s) => ({ ...s, location: e.target.value }))}
-              className="min-w-0 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="min-w-0 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm placeholder:text-white/50 h-10"
             />
-            <select
-              aria-label="Experience Level"
-              value={filters.experienceLevel}
-              onChange={(e) => setFilters((s) => ({ ...s, experienceLevel: e.target.value }))}
-              className="min-w-0 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
-            >
-              <option value="">Any experience</option>
-              <option value="Entry level">Entry level</option>
-              <option value="Mid-Senior level">Mid-Senior level</option>
-              <option value="Associate">Associate</option>
-            </select>
-            <select
-              aria-label="Job Type"
-              value={filters.jobType}
-              onChange={(e) => setFilters((s) => ({ ...s, jobType: e.target.value }))}
-              className="min-w-0 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
-            >
-              <option value="">Any type</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Contract">Contract</option>
-              <option value="Internship">Internship</option>
-            </select>
+
+            <Select value={filters.sourcePlatform} onValueChange={(value) => setFilters(s => ({ ...s, sourcePlatform: value === "all" ? "" : value }))}>
+              <SelectTrigger aria-label="Platform">
+                <SelectValue placeholder="All Platforms" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Platforms</SelectItem>
+                <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                <SelectItem value="Indeed">Indeed</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={filters.experienceLevel} onValueChange={(value) => setFilters(s => ({ ...s, experienceLevel: value === "any" ? "" : value }))}>
+              <SelectTrigger aria-label="Experience Level">
+                <SelectValue placeholder="Any experience" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any experience</SelectItem>
+                <SelectItem value="Entry level">Entry level</SelectItem>
+                <SelectItem value="Mid-Senior level">Mid-Senior level</SelectItem>
+                <SelectItem value="Associate">Associate</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={filters.jobType} onValueChange={(value) => setFilters(s => ({ ...s, jobType: value === "any" ? "" : value }))}>
+              <SelectTrigger aria-label="Job Type">
+                <SelectValue placeholder="Any type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="any">Any type</SelectItem>
+                <SelectItem value="Full-time">Full-time</SelectItem>
+                <SelectItem value="Contract">Contract</SelectItem>
+                <SelectItem value="Internship">Internship</SelectItem>
+              </SelectContent>
+            </Select>
+
           </div>
         </div>
       </header>
@@ -150,7 +167,6 @@ export default function SearchPage() {
         <h2 className="mb-3 text-base font-light tracking-tight">
           {isLoading ? "Loading jobs..." : `${totalJobs} jobs available`}
         </h2>
-
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {isLoading ? (
             Array.from({ length: 9 }).map((_, i) => (
@@ -160,7 +176,6 @@ export default function SearchPage() {
             jobs.map((j) => <JobCard key={j._id} job={j} />)
           )}
         </div>
-
         <div className="mt-8 flex justify-center">
           {!isLoading && currentPage < totalPages && (
             <button
@@ -178,4 +193,3 @@ export default function SearchPage() {
     </main>
   )
 }
-
